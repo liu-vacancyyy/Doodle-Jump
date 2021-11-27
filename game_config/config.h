@@ -9,7 +9,6 @@ namespace gameconfig{
     {
     public:
         GameConfig();
-        ~GameConfig();
     private:
         cv::FileStorage game_read_;
         int difficulty_;
@@ -19,7 +18,6 @@ namespace gameconfig{
     {
     public:
         DetectionConfig();
-        ~DetectionConfig();
         int GetCameraId(){return camera_id_;}
         bool GetDebug(){return debug_;}
     private:
