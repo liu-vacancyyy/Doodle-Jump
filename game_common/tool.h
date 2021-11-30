@@ -5,8 +5,13 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-namespace gamecommon{
-    uint64_t GetTimeNow();
-}
+bool gameOver=false;
+
+struct GameControl{
+    int direction=0;
+    int speed=0;
+}gameControl;
+
+uint64_t GetTimeNow();
 
 #endif

@@ -1,15 +1,15 @@
 #include "camera.h"
 
-using namespace gamecommon;
-
 namespace gamecamera{
-    GameCamera::GameCamera(int id){
-        cap_=new::cv::VideoCapture(id);
+    GameCamera::GameCamera(gameconfig::DetectionConfig detection_config){
+        cap_=new::cv::VideoCapture(detection_config.GetCameraId());
         if(!cap_->isOpened()){
             running_=false;
         }else{
             running_=true;
         }
+        cap_->set(cv::CAP_PROP_FRAME_WIDTH,detection_config.GetWidth());
+        cap_->set(cv::CAP_PROP_FRAME_HEIGHT,detection_config.GetHeight());
         init_time_=GetTimeNow();
         now_time_=GetTimeNow()-init_time_;
     }

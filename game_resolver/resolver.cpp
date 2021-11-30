@@ -17,27 +17,33 @@ namespace gameresolver{
 
     void GameResolver::GetRoi(cv::Mat frame){
 
-        int * pResults = NULL;
+        int * p_results = NULL;
+        int max_confidence=0;
         
-        pResults = facedetect_cnn(p_buffer_, (unsigned char*)(frame.ptr(0)), frame.cols, frame.rows, (int)frame.step);
+        p_results = facedetect_cnn(p_buffer_, (unsigned char*)(frame.ptr(0)), frame.cols, frame.rows, (int)frame.step);
 
-        for(int i = 0; i < (pResults ? *pResults : 0); i++)
+        for(int i = 0; i < (p_results ? *p_results : 0); i++)
         {
-            short * p = ((short*)(pResults+1))+142*i;
+            short * p = ((short*)(p_results+1))+142*i;
             int confidence = p[0];
             int x = p[1];
             int y = p[2];
             int w = p[3];
             int h = p[4];
-            
-            //show the score of the face. Its range is [0-100]
-            char sScore[256];
-            snprintf(sScore, 256, "%d", confidence);
-            cv::putText(frame, sScore, cv::Point(x, y-3), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 1);
-            //draw face rectangle
-            cv::rectangle(frame, cv::Rect(x, y, w, h), cv::Scalar(0, 255, 0), 2);
-            tl_=cv::Point2f(x,y);
-            br_=cv::Point2f(w,h);
+            if(confidence>max_confidence){
+                cv::rectangle(frame, cv::Rect(x, y, w, h), cv::Scalar(0, 255, 0), 2);
+                tl_=cv::Point2f(x,y);
+                br_=cv::Point2f(w,h);
+                max_confidence=confidence;
+            }
+        }
+
+        if(tl_.x!=-1&&br_.x!=-1){
+            if(!current_roi_.empty()){
+                last_roi_=current_roi_.clone();
+            }
+            cv::Rect roi_rect(tl_,br_);
+            current_roi_=frame(roi_rect);
         }
     }
 }

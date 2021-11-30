@@ -18,12 +18,16 @@ namespace gameconfig{
     {
     public:
         DetectionConfig();
-        int GetCameraId(){return camera_id_;}
-        bool GetDebug(){return debug_;}
+        int GetCameraId() {return camera_id_;}
+        bool GetDebug() {return debug_;}
+        int GetWidth() {return width_;}
+        int GetHeight() {return height_;}
     private:
         cv::FileStorage detection_read_;
         int camera_id_;
         int debug_;
+        int width_;
+        int height_;
     };
 }
 #endif

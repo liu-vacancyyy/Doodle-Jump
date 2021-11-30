@@ -1,3 +1,5 @@
 %YAML 1.0
-camera_id:  0
-debug:  1
+camera_id:  0 #免驱相机id
+debug:  1 #是否开启debug
+width: 320 #图像宽度
+height: 240 #图像高度

@@ -4,8 +4,6 @@
 #include "game_config/config.h"
 #include "game_resolver/resolver.h"
 
-bool gameOver=false;
-
 void signalHandler(int signal){
     gameOver=true;
 }
@@ -20,12 +18,13 @@ void GamePlaying(){
 void DetectionRunning(){
     cv::Mat frame;
     gameconfig::DetectionConfig detectionConfig;
-    gamecamera::GameCamera gameCamera(detectionConfig.GetCameraId());
+    gamecamera::GameCamera gameCamera(detectionConfig);
     gameresolver::GameResolver gameResolver;
     while (gameCamera.GetRunning()&&!gameOver)
     {
         gameCamera.GetImage(frame);
         gameResolver.GetRoi(frame);
+        gameResolver.SetControl(gameControl);
         if(detectionConfig.GetDebug()){
             cv::imshow("detection",frame);
             cv::waitKey(1);
