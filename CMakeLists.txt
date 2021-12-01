@@ -18,9 +18,6 @@ add_subdirectory(game_resolver)
 include_directories(${PROJECT_SOURCE_DIR}/game_camera)
 add_subdirectory(game_camera)
 
-include_directories(${PROJECT_SOURCE_DIR}/game_config)
-add_subdirectory(game_config)
-
 add_executable(vrgame 
     main.cpp)
 target_link_libraries(vrgame 

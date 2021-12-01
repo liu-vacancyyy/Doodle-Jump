@@ -3,5 +3,5 @@ project(gamecommon)
 
 set(CMAKE_CXX_STANDARD 14)
 find_package(OpenCV REQUIRED)
-add_library(gamecommon tool.cpp tool.h)
+add_library(gamecommon common.cpp common.h)
 target_link_libraries(gamecommon ${OpenCV_LIBS})

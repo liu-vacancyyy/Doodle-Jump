@@ -1,7 +1,7 @@
 #include "camera.h"
 
 namespace gamecamera{
-    GameCamera::GameCamera(gameconfig::DetectionConfig detection_config){
+    GameCamera::GameCamera(DetectionConfig detection_config){
         cap_=new::cv::VideoCapture(detection_config.GetCameraId());
         if(!cap_->isOpened()){
             running_=false;

@@ -1,7 +1,7 @@
 #include "game_camera/camera.h"
 #include <thread>
 #include <signal.h>
-#include "game_config/config.h"
+#include "game_common/common.h"
 #include "game_resolver/resolver.h"
 
 void signalHandler(int signal){
@@ -17,21 +17,22 @@ void GamePlaying(){
 
 void DetectionRunning(){
     cv::Mat frame;
-    gameconfig::DetectionConfig detectionConfig;
     gamecamera::GameCamera gameCamera(detectionConfig);
     gameresolver::GameResolver gameResolver;
-    while (gameCamera.GetRunning()&&!gameOver)
+    while (!gameOver)
     {
-        gameCamera.GetImage(frame);
-        gameResolver.GetRoi(frame);
-        gameResolver.SetControl(gameControl);
-        if(detectionConfig.GetDebug()){
-            cv::imshow("detection",frame);
-            cv::waitKey(1);
+        if(!gameCamera.GetRunning()){
+            std::cout<<"Get frame failed!"<<std::endl;
+        }else{
+            gameCamera.GetImage(frame);
+            gameResolver.GetRoi(frame,gameCamera.GetFrameTime());
+            gameResolver.SetControl();
+            if(detectionConfig.GetDebug()){
+                cv::imshow("detection",frame);
+                cv::waitKey(1);
+            }
         }
     }
-    if(!gameCamera.GetRunning())
-        std::cout<<"Get frame failed!"<<std::endl;
 }
 
 int main(){
