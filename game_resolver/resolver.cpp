@@ -21,7 +21,6 @@ namespace gameresolver{
     }
 
     void GameResolver::GetRoi(cv::Mat frame,float current_time){
-
         int * p_results = NULL;
         int max_confidence=0;
         
@@ -39,9 +38,11 @@ namespace gameresolver{
             int w = p[3];
             int h = p[4];
             if(confidence>max_confidence){
-                cv::rectangle(frame, cv::Rect(x, y, w, h), cv::Scalar(0, 255, 0), 2);
                 tl=cv::Point2f(x,y);
                 br=cv::Point2f(w,h);
+                if(detectionConfig.GetDebug())
+                    cv::rectangle(frame, cv::Rect(x,y,w,h), cv::Scalar(0, 255, 0), 2);
+                    cv::rectangle(frame, cv::Rect(x+20,y+20,100,100), cv::Scalar(0, 255, 0), 2);
                 max_confidence=confidence;
             }
         }
@@ -49,8 +50,8 @@ namespace gameresolver{
         if(tl.x!=-1&&br.x!=-1){
             have_face_=true;
             MatchFrame match_frame;
-            cv::Rect roi_rect(tl,br);
-            match_frame.frame=frame(roi_rect);
+            match_frame.frame=frame(cv::Rect(tl.x,tl.y,br.x,br.y));
+            cv::cvtColor(match_frame.frame,match_frame.frame,cv::COLOR_BGR2GRAY);
             match_frame.tl=tl;
             match_frame.br=br;
             match_frame.time=current_time;
@@ -68,8 +69,10 @@ namespace gameresolver{
         if(have_face_&&rois_.size()>1){
             if(rois_.back().time-rois_.front().time<max_time_diff_){
                 FindFeatureMatch();
-                ResolvePose();
-                smooth_yaw=SmoothAngle();
+                if(detectionConfig.GetResolve()){
+                    ResolvePose();
+                    //smooth_yaw=SmoothAngle();
+                }
             }
         }
         locker_.lock();
@@ -87,20 +90,20 @@ namespace gameresolver{
     }
 
     void GameResolver::FindFeatureMatch(){
-        if(rois_.back().time-rois_.front().time<max_time_diff_){
-            cv::Mat last_descriptors;
-            cv::Mat current_descriptors;
-            orb_detector_->detect(rois_.front().frame,last_key_points_);
-            orb_detector_->detect(rois_.front().frame,current_key_points_);
-            orb_descriptor_->compute(rois_.front().frame,last_key_points_,last_descriptors);
-            orb_descriptor_->compute(rois_.back().frame,current_key_points_,current_descriptors);
-            orb_matcher_->match(last_descriptors,current_descriptors,orb_matches_);
-        }
+        cv::Mat last_descriptors;
+        cv::Mat current_descriptors;
+        orb_detector_->detect(rois_.front().frame,last_key_points_);
+        orb_detector_->detect(rois_.front().frame,current_key_points_);
+        orb_descriptor_->compute(rois_.front().frame,last_key_points_,last_descriptors);
+        orb_descriptor_->compute(rois_.back().frame,current_key_points_,current_descriptors);
+        orb_matcher_->match(last_descriptors,current_descriptors,orb_matches_);
     }
 
     void GameResolver::ResolvePose(){
         std::vector<cv::Point2f> last_points;
         std::vector<cv::Point2f> current_points;
+        if(detectionConfig.GetDebug())
+            std::cout<<"matches="<<(int)orb_matches_.size()<<std::endl;
         for(int i=0;i<(int)orb_matches_.size();i++){
             last_points.push_back(last_key_points_[orb_matches_[i].queryIdx].pt+rois_.front().tl);
             current_points.push_back(current_key_points_[orb_matches_[i].trainIdx].pt+rois_.back().tl);

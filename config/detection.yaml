@@ -1,18 +1,23 @@
 %YAML 1.0
-k_mat: !!opencv_matrix
-	rows: 3
-	cols: 3
-	dt: d
-	data: [614.7671727807868, 0, 327.5226064452396;
-	       0, 615.4841046094149, 239.8579664395667;
-	       0, 0, 1]
-discoffes_mat: !!opencv_matrix
-	rows: 5
-	cols: 1
-	dt: d
-	data: [-0.1938681403538076, 0.7563811739262895, 0.000162325962263385,-0.0004300425070004425, -1.060887545143729]
-camera_id:  0 #免驱相机id
+camera_id:  0 #免驱相机id,不开相机则取-1
+video: 0 #视频调试模式
+picture: 0 #图片调试模式
+video_path_: "../record/videos/test.avi"
+picture1_path_: "../record/pictures/test1.avi"
+picture2_path_: "../record/pictures/test2.avi"
 debug:  1 #是否开启debug
 width: 320 #图像宽度
 height: 240 #图像高度
+resolve: 1 #是否解算位姿
 focal_length: 20 #相机焦距
+record: 0 #是否录像
+k_mat: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 614.7671727807868,0., 327.5226064452396,0.,615.4841046094149, 239.8579664395667,0., 0.,1 ]
+dist_coffes: !!opencv-matrix
+   rows: 5
+   cols: 1
+   dt: d
+   data: [ -0.1938681403538076, 0.7563811739262895, 0.000162325962263385,-0.0004300425070004425, -1.060887545143729 ]

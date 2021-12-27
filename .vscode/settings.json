@@ -78,6 +78,9 @@
         "ios": "cpp",
         "locale": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
-    }
+        "stack": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp"
+    },
+    "ros.distro": "melodic"
 }

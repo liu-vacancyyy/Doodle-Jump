@@ -1,6 +1,6 @@
 #ifndef GAME_RESOLVER_H
 #define GAME_RESOLVER_H
-#include "../game_detector/facedetectcnn.h"
+#include "../third_party/game_detector/facedetectcnn.h"
 #include "../game_common/common.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -89,7 +89,7 @@ namespace gameresolver{
         /*************************常用参数*************************/
         const unsigned int detect_buffer_size_=0x20000; //模型参数,切勿修改
         const int max_size_=2; //最大历史信息数量
-        const int max_time_diff_=500000; //两帧最大允许时间差
+        const int max_time_diff_=1000000000; //两帧最大允许时间差
         cv::Point2f principal_point_; //相机光心
         float focal_length_; //相机焦距
         cv::Mat K_; //相机内参
